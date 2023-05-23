@@ -35,12 +35,12 @@ func NewParser(fs afero.Fs) *Parser {
 	}
 }
 
-// Context return EvalContext
+// Context return EvalContext.
 func (p *Parser) Context() *hcl.EvalContext {
 	return p.ctx
 }
 
-// Parse config
+// Parse config.
 func (p *Parser) Parse(filename string, src []byte) (*File, hcl.Diagnostics) {
 	f, diags := hclsyntax.ParseConfig(src, filename, hcl.Pos{Line: 1, Column: 1})
 

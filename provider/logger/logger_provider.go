@@ -49,7 +49,7 @@ func ConfigProvider(cfg *fabric.Configuration) (*Config, error) {
 	}
 
 	if err := cfg.ParseProvider(ProviderName, c); err != nil {
-		return c, nil
+		return c, nil // nolint: nilerr // return default config if parsing failed
 	}
 
 	return c, nil
@@ -81,6 +81,7 @@ func Factory(cfg *Config) (*zerolog.Logger, error) {
 		output = os.Stdout
 	}
 
+	// nolint: exhaustive // OutputFormatAuto is default
 	switch cfg.Format {
 	case OutputFormatJSON:
 		logger = logger.Output(output)

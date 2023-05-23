@@ -1,6 +1,6 @@
 package fabric
 
-import "go.opentelemetry.io/otel/metric/global"
+import "go.opentelemetry.io/otel"
 
 // Meter can be a global/package variable.
-var meter = global.MeterProvider().Meter("fabric")
+var meter = otel.GetMeterProvider().Meter("fabric")

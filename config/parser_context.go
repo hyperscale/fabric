@@ -1,6 +1,8 @@
 package config
 
 import (
+	"fmt"
+
 	"github.com/hashicorp/hcl/v2"
 	"github.com/zclconf/go-cty/cty"
 	"github.com/zclconf/go-cty/cty/function"
@@ -74,7 +76,7 @@ func createEvalContext() *hcl.EvalContext {
 			Impl: func(args []cty.Value, retType cty.Type) (cty.Value, error) {
 				b, err := ctyjson.Marshal(args[0], args[0].Type())
 				if err != nil {
-					return cty.Value{}, err
+					return cty.Value{}, fmt.Errorf("create eval func: %w", err)
 				}
 
 				return cty.StringVal(string(b)), nil

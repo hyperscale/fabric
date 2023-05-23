@@ -11,7 +11,7 @@ import (
 
 	"github.com/rs/zerolog"
 	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/metric/instrument"
+	"go.opentelemetry.io/otel/metric"
 )
 
 var _ ServiceLifeCycle = (*Service)(nil)
@@ -48,7 +48,7 @@ type Service struct {
 	signal      chan os.Signal
 	logger      *zerolog.Logger
 	providers   []BootableProvider
-	startMetric instrument.Int64Histogram
+	startMetric metric.Int64Histogram
 	now         time.Time
 }
 
@@ -64,8 +64,8 @@ func NewService(opts ...ServiceOption) (*Service, error) {
 
 	startMetric, err := meter.Int64Histogram(
 		"service.start.duration",
-		instrument.WithUnit("microseconds"),
-		instrument.WithDescription("Time to start the service"),
+		metric.WithUnit("microseconds"),
+		metric.WithDescription("Time to start the service"),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create service.start.duration metric: %w", err)
@@ -118,8 +118,12 @@ func (s *Service) Start() error {
 	s.startMetric.Record(
 		ctx,
 		time.Since(s.now).Microseconds(),
-		attribute.String("service.name", s.name),
-		attribute.String("service.version", s.version),
+		metric.WithAttributeSet(
+			attribute.NewSet(
+				attribute.String("service.name", s.name),
+				attribute.String("service.version", s.version),
+			),
+		),
 	)
 
 	logger.Debug().Dur("duration", time.Since(s.now)).Msg("Service started")

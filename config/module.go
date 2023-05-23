@@ -37,6 +37,7 @@ type Module struct {
 // module will probably not be semantically valid.
 func NewModule(primaryFiles, overrideFiles []*File) (*Module, hcl.Diagnostics) {
 	var diags hcl.Diagnostics
+
 	mod := &Module{
 		Variables: map[string]cty.Value{},
 		Providers: map[string]*Provider{},
@@ -80,8 +81,9 @@ func (m *Module) appendFile(file *File) hcl.Diagnostics {
 				Severity: hcl.DiagError,
 				Summary:  fmt.Sprintf("Duplicate provider %q configuration", existing.Name),
 				Detail:   fmt.Sprintf("A provider named %q was already declared. Provider names must be unique per type in each module.", existing.Name),
-				//Subject:  &r.DeclRange,
+				// Subject:  &r.DeclRange,
 			})
+
 			continue
 		}
 

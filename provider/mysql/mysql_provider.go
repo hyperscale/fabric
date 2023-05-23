@@ -55,7 +55,7 @@ func Factory(logger *zerolog.Logger, cfg *Config) (*sqlx.DB, error) {
 	if err != nil {
 		logger.Error().Err(err).Msg("MySQLFactory failed")
 
-		return nil, err
+		return nil, fmt.Errorf("mysql factory: %w", err)
 	}
 
 	return db, nil // *sqlx.DB
@@ -88,5 +88,6 @@ func (p *Provider) Start() error {
 }
 
 func (p *Provider) Stop() error {
+	// nolint: wrapcheck // not nessary
 	return p.db.Close()
 }

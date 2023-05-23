@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/hcl/v2"
 )
 
-// LoadConfigFile config
+// LoadConfigFile config.
 func (p *Parser) LoadConfigFile(path string) (*File, hcl.Diagnostics) {
 	return p.loadConfigFile(path, false)
 }

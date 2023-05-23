@@ -26,7 +26,7 @@ import (
 // will simply return an empty module in that case. Callers should first call
 // Parser.IsConfigDir if they wish to recognize that situation.
 //
-// .tales files are parsed using the HCL native syntax
+// .hcl files are parsed using the HCL native syntax.
 func (p *Parser) LoadConfigDir(path string) (*Module, hcl.Diagnostics) {
 	primaryPaths, overridePaths, diags := p.dirFiles(path)
 	if diags.HasErrors() {
@@ -56,25 +56,33 @@ func (p Parser) ConfigDirFiles(dir string) (primary, override []string, diags hc
 }
 
 // IsConfigDir determines whether the given path refers to a directory that
-// exists and contains at least one Terraform config file (with a .tales extension.)
+// exists and contains at least one Fabric config file (with a .hcl extension.).
 func (p *Parser) IsConfigDir(path string) bool {
 	primaryPaths, overridePaths, _ := p.dirFiles(path)
+
 	return (len(primaryPaths) + len(overridePaths)) > 0
 }
 
 func (p *Parser) loadFiles(paths []string, override bool) ([]*File, hcl.Diagnostics) {
-	var files []*File
-	var diags hcl.Diagnostics
+	var (
+		files []*File
+		diags hcl.Diagnostics
+	)
 
 	for _, path := range paths {
-		var f *File
-		var fDiags hcl.Diagnostics
+		var (
+			f      *File
+			fDiags hcl.Diagnostics
+		)
+
 		if override {
 			f, fDiags = p.LoadConfigFileOverride(path)
 		} else {
 			f, fDiags = p.LoadConfigFile(path)
 		}
+
 		diags = append(diags, fDiags...)
+
 		if f != nil {
 			files = append(files, f)
 		}
@@ -89,8 +97,6 @@ func (p *Parser) dirFiles(dir string) (primary, override []string, diags hcl.Dia
 	if err := p.fs.Walk(dir, func(path string, info os.FileInfo, err error) error {
 		infos[path] = info
 
-		//infos = append(infos, info)
-
 		return nil
 	}); err != nil {
 		diags = append(diags, &hcl.Diagnostic{
@@ -101,17 +107,6 @@ func (p *Parser) dirFiles(dir string) (primary, override []string, diags hcl.Dia
 
 		return
 	}
-	/*
-		infos, err := p.fs.ReadDir(dir)
-		if err != nil {
-			diags = append(diags, &hcl.Diagnostic{
-				Severity: hcl.DiagError,
-				Summary:  "Failed to read module directory",
-				Detail:   fmt.Sprintf("Module directory %s does not exist or cannot be read.", dir),
-			})
-			return
-		}
-	*/
 
 	for filename, info := range infos {
 		if info.IsDir() {
@@ -122,6 +117,7 @@ func (p *Parser) dirFiles(dir string) (primary, override []string, diags hcl.Dia
 		name := info.Name()
 		ext := fileExt(name)
 		path := filepath.Dir(filename)
+
 		if ext == "" || IsIgnoredFile(name) {
 			continue
 		}
@@ -130,6 +126,7 @@ func (p *Parser) dirFiles(dir string) (primary, override []string, diags hcl.Dia
 		isOverride := baseName == "override" || strings.HasSuffix(baseName, "_override")
 
 		fullPath := filepath.Join(path, name)
+
 		if isOverride {
 			override = append(override, fullPath)
 		} else {
@@ -140,7 +137,7 @@ func (p *Parser) dirFiles(dir string) (primary, override []string, diags hcl.Dia
 	return
 }
 
-// fileExt returns the Terraform configuration extension of the given
+// fileExt returns the Fabric configuration extension of the given
 // path, or a blank string if it is not a recognized extension.
 func fileExt(path string) string {
 	if strings.HasSuffix(path, ".hcl") {
@@ -171,6 +168,7 @@ func IsEmptyDir(path string) (bool, error) {
 
 	p := NewParser(nil)
 	fs, os, diags := p.dirFiles(path)
+
 	if diags.HasErrors() {
 		return false, diags
 	}
