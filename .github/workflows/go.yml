@@ -23,7 +23,7 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Build
-      run: go build -race -v -o ./demo.app ./demo
+      run: go build -race -v ./...
 
     - name: Test
       run: go test -race ./...
