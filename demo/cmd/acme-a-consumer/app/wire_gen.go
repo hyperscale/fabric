@@ -23,7 +23,7 @@ func New() (*fabric.Service, error) {
 	if err != nil {
 		return nil, err
 	}
-	zerologLogger, err := logger.Factory(config)
+	slogLogger, err := logger.Factory(config)
 	if err != nil {
 		return nil, err
 	}
@@ -31,7 +31,7 @@ func New() (*fabric.Service, error) {
 	if err != nil {
 		return nil, err
 	}
-	db, err := mysql.Factory(zerologLogger, mysqlConfig)
+	db, err := mysql.Factory(slogLogger, mysqlConfig)
 	if err != nil {
 		return nil, err
 	}
@@ -39,7 +39,7 @@ func New() (*fabric.Service, error) {
 	options := &Options{
 		MySQLProvider: provider,
 	}
-	service, err := NewApplication(zerologLogger, options)
+	service, err := NewApplication(slogLogger, options)
 	if err != nil {
 		return nil, err
 	}
