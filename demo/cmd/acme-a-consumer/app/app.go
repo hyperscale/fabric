@@ -6,7 +6,7 @@ import (
 	"github.com/google/wire"
 	"github.com/hyperscale/fabric"
 	"github.com/hyperscale/fabric/provider/mysql"
-	"github.com/rs/zerolog"
+	"golang.org/x/exp/slog"
 )
 
 var applicationSet = wire.NewSet(
@@ -18,8 +18,8 @@ type Options struct {
 	MySQLProvider *mysql.Provider
 }
 
-func NewApplication(logger *zerolog.Logger, opts *Options) (*fabric.Service, error) {
-	logger.Debug().Msg("Running Fabric Application")
+func NewApplication(logger *slog.Logger, opts *Options) (*fabric.Service, error) {
+	logger.Debug("Starting Fabric Application")
 
 	s, err := fabric.NewService(
 		fabric.Name("acme-a-consumer"),

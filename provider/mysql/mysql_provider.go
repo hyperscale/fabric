@@ -9,7 +9,7 @@ import (
 	"github.com/google/wire"
 	"github.com/hyperscale/fabric"
 	"github.com/jmoiron/sqlx"
-	"github.com/rs/zerolog"
+	"golang.org/x/exp/slog"
 )
 
 const (
@@ -47,13 +47,13 @@ func ConfigProvider(cfg *fabric.Configuration) (*Config, error) {
 	return c, nil
 }
 
-func Factory(logger *zerolog.Logger, cfg *Config) (*sqlx.DB, error) {
+func Factory(logger *slog.Logger, cfg *Config) (*sqlx.DB, error) {
 	db, err := sqlx.Connect(
 		ProviderName,
 		cfg.FormatDSN(),
 	)
 	if err != nil {
-		logger.Error().Err(err).Msg("MySQLFactory failed")
+		logger.Error("MySQLFactory failed", slog.Any("error", err))
 
 		return nil, fmt.Errorf("mysql factory: %w", err)
 	}

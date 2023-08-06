@@ -9,9 +9,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/rs/zerolog"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/metric"
+	"golang.org/x/exp/slog"
 )
 
 var _ ServiceLifeCycle = (*Service)(nil)
@@ -30,7 +30,7 @@ func Version(version string) ServiceOption {
 	}
 }
 
-func Logger(logger *zerolog.Logger) ServiceOption {
+func Logger(logger *slog.Logger) ServiceOption {
 	return func(s *Service) {
 		s.logger = logger
 	}
@@ -46,7 +46,7 @@ type Service struct {
 	name        string
 	version     string
 	signal      chan os.Signal
-	logger      *zerolog.Logger
+	logger      *slog.Logger
 	providers   []BootableProvider
 	startMetric metric.Int64Histogram
 	now         time.Time
@@ -56,6 +56,7 @@ func NewService(opts ...ServiceOption) (*Service, error) {
 	s := &Service{
 		signal: make(chan os.Signal, 1),
 		now:    time.Now().UTC(),
+		logger: slog.New(slog.NewTextHandler(os.Stdout, nil)),
 	}
 
 	for _, opt := range opts {
@@ -83,9 +84,9 @@ func (s *Service) Register(provider BootableProvider) {
 func (s *Service) Start() error {
 	ctx := context.Background()
 
-	logger := s.logger.With().Str("service.name", s.name).Str("service.version", s.version).Logger()
+	logger := s.logger.With(slog.String("service.name", s.name), slog.String("service.version", s.version))
 
-	logger.Info().Msg("Starting...")
+	logger.InfoContext(ctx, "Starting...")
 
 	signal.Notify(s.signal, os.Interrupt, syscall.SIGTERM)
 
@@ -101,14 +102,14 @@ func (s *Service) Start() error {
 		wg.Add(1)
 
 		go func(p BootableProvider) {
-			slog := logger.With().Str("provider.name", p.Name()).Logger()
+			sl := logger.With(slog.String("provider.name", p.Name()))
 
-			slog.Debug().Msg("Starting provider")
+			sl.DebugContext(ctx, "Starting provider")
 
 			wg.Done()
 
 			if err := p.Start(); err != nil {
-				slog.Error().Err(err).Msg("Start failed")
+				sl.ErrorContext(ctx, "Start failed", slog.Any("error", err))
 			}
 		}(provider)
 
@@ -126,7 +127,7 @@ func (s *Service) Start() error {
 		),
 	)
 
-	logger.Debug().Dur("duration", time.Since(s.now)).Msg("Service started")
+	logger.DebugContext(ctx, "Service started", slog.Duration("duration", time.Since(s.now)))
 
 	<-s.signal
 
@@ -136,15 +137,15 @@ func (s *Service) Start() error {
 		bootables[i], bootables[opp] = bootables[opp], bootables[i]
 	}
 
-	logger.Info().Msg("Shutdown...")
+	logger.InfoContext(ctx, "Shutdown...")
 
 	for _, provider := range bootables {
-		slog := logger.With().Str("provider.name", provider.Name()).Logger()
+		sl := logger.With(slog.String("provider.name", provider.Name()))
 
-		slog.Debug().Msg("Stopping provider")
+		sl.DebugContext(ctx, "Stopping provider")
 
 		if err := provider.Stop(); err != nil {
-			slog.Error().Err(err).Msg("Stop failed")
+			sl.ErrorContext(ctx, "Stop failed", slog.Any("error", err))
 		}
 	}
 

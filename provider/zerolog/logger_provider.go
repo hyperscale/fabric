@@ -2,15 +2,18 @@
 // Use of this source code is governed by a MIT
 // license that can be found in the LICENSE file.
 
-package logger
+package zerolog
 
 import (
+	"fmt"
 	"io"
+	stdlog "log"
 	"os"
 
 	"github.com/google/wire"
 	"github.com/hyperscale/fabric"
-	"golang.org/x/exp/slog"
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 )
 
 const ProviderName = "logger"
@@ -52,15 +55,21 @@ func ConfigProvider(cfg *fabric.Configuration) (*Config, error) {
 	return c, nil
 }
 
-func Factory(cfg *Config) (*slog.Logger, error) {
-	/*
-		var ll slog.Level
+func Factory(cfg *Config) (*zerolog.Logger, error) {
+	ll, err := zerolog.ParseLevel(cfg.Level)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse logger level: %w", err)
+	}
 
-		err := ll.UnmarshalText([]byte(cfg.Level))
-		if err != nil {
-			return nil, fmt.Errorf("failed to parse logger level: %w", err)
-		}
-	*/
+	zerolog.SetGlobalLevel(ll)
+
+	zerolog.CallerSkipFrameCount = 3
+
+	logger := zerolog.New(os.Stdout).With().
+		Timestamp().
+		Caller().
+		Logger()
+
 	var output io.Writer
 
 	switch cfg.Stdout {
@@ -72,22 +81,27 @@ func Factory(cfg *Config) (*slog.Logger, error) {
 		output = os.Stdout
 	}
 
-	var h slog.Handler
-
 	// nolint: exhaustive // OutputFormatAuto is default
 	switch cfg.Format {
 	case OutputFormatJSON:
-		h = slog.NewJSONHandler(output, nil)
-
+		logger = logger.Output(output)
 	case OutputFormatConsole:
-		h = slog.NewTextHandler(output, nil)
+		logger = logger.Output(zerolog.ConsoleWriter{Out: output})
 	default:
-		h = slog.NewJSONHandler(output, nil)
+		fi, err := os.Stdin.Stat()
+		if err != nil {
+			logger.Fatal().Err(err).Msg("Stdin.Stat failed")
+		}
+
+		if (fi.Mode() & os.ModeCharDevice) != 0 {
+			logger = logger.Output(zerolog.ConsoleWriter{Out: output})
+		}
 	}
 
-	logger := slog.New(h)
+	stdlog.SetFlags(0)
+	stdlog.SetOutput(logger)
 
-	slog.SetDefault(logger)
+	log.Logger = logger
 
-	return logger, nil
+	return &logger, nil
 }
