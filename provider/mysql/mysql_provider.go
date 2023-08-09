@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"fmt"
+	"log/slog"
 	"net"
 	"strconv"
 
@@ -9,7 +10,6 @@ import (
 	"github.com/google/wire"
 	"github.com/hyperscale/fabric"
 	"github.com/jmoiron/sqlx"
-	"golang.org/x/exp/slog"
 )
 
 const (

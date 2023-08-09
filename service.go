@@ -3,6 +3,7 @@ package fabric
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"os"
 	"os/signal"
 	"sync"
@@ -11,7 +12,6 @@ import (
 
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/metric"
-	"golang.org/x/exp/slog"
 )
 
 var _ ServiceLifeCycle = (*Service)(nil)

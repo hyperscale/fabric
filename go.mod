@@ -1,6 +1,6 @@
 module github.com/hyperscale/fabric
 
-go 1.20
+go 1.21
 
 require (
 	github.com/go-sql-driver/mysql v1.7.1
@@ -12,7 +12,6 @@ require (
 	github.com/zclconf/go-cty v1.13.2
 	go.opentelemetry.io/otel v1.16.0
 	go.opentelemetry.io/otel/metric v1.16.0
-	golang.org/x/exp v0.0.0-20230801115018-d63ba01acd4b
 )
 
 require (

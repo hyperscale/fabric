@@ -2,11 +2,11 @@ package app
 
 import (
 	"fmt"
+	"log/slog"
 
 	"github.com/google/wire"
 	"github.com/hyperscale/fabric"
 	"github.com/hyperscale/fabric/provider/mysql"
-	"golang.org/x/exp/slog"
 )
 
 var applicationSet = wire.NewSet(

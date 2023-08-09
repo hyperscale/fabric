@@ -6,11 +6,11 @@ package logger
 
 import (
 	"io"
+	"log/slog"
 	"os"
 
 	"github.com/google/wire"
 	"github.com/hyperscale/fabric"
-	"golang.org/x/exp/slog"
 )
 
 const ProviderName = "logger"
