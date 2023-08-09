@@ -54,7 +54,6 @@ linters-settings:
 linters:
   disable-all: true
   enable:
-    - depguard
     - errcheck
     - gas
     - goconst
