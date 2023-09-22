@@ -9,14 +9,13 @@ require (
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/rs/zerolog v1.30.0
 	github.com/spf13/afero v1.9.5
-	github.com/zclconf/go-cty v1.13.2
+	github.com/zclconf/go-cty v1.14.0
 	go.opentelemetry.io/otel v1.18.0
 	go.opentelemetry.io/otel/metric v1.18.0
 )
 
 require (
 	github.com/agext/levenshtein v1.2.1 // indirect
-	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect
 	github.com/apparentlymart/go-textseg/v15 v15.0.0 // indirect
 	github.com/go-logr/logr v1.2.4 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
