@@ -8,7 +8,7 @@ require (
 	github.com/hashicorp/hcl/v2 v2.18.0
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/rs/zerolog v1.30.0
-	github.com/spf13/afero v1.9.5
+	github.com/spf13/afero v1.10.0
 	github.com/zclconf/go-cty v1.14.0
 	go.opentelemetry.io/otel v1.18.0
 	go.opentelemetry.io/otel/metric v1.18.0
