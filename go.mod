@@ -7,7 +7,7 @@ require (
 	github.com/google/wire v0.5.0
 	github.com/hashicorp/hcl/v2 v2.18.0
 	github.com/jmoiron/sqlx v1.3.5
-	github.com/rs/zerolog v1.30.0
+	github.com/rs/zerolog v1.31.0
 	github.com/spf13/afero v1.10.0
 	github.com/zclconf/go-cty v1.14.0
 	go.opentelemetry.io/otel v1.18.0
@@ -21,9 +21,9 @@ require (
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
-	github.com/mattn/go-isatty v0.0.17 // indirect
+	github.com/mattn/go-isatty v0.0.19 // indirect
 	github.com/mitchellh/go-wordwrap v0.0.0-20150314170334-ad45545899c7 // indirect
 	go.opentelemetry.io/otel/trace v1.18.0 // indirect
-	golang.org/x/sys v0.6.0 // indirect
+	golang.org/x/sys v0.12.0 // indirect
 	golang.org/x/text v0.11.0 // indirect
 )
