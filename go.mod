@@ -5,7 +5,7 @@ go 1.21
 require (
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/google/wire v0.5.0
-	github.com/hashicorp/hcl/v2 v2.19.0
+	github.com/hashicorp/hcl/v2 v2.19.1
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/rs/zerolog v1.31.0
 	github.com/spf13/afero v1.10.0
