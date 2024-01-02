@@ -33,6 +33,7 @@ func (c *Config) FormatDSN() string {
 		Passwd:               c.Password,
 		DBName:               c.Database,
 		AllowNativePasswords: true,
+		ParseTime:            true,
 	}
 
 	return sqlCfg.FormatDSN()
