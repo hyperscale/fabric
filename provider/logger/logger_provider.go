@@ -5,6 +5,7 @@
 package logger
 
 import (
+	"fmt"
 	"io"
 	"log/slog"
 	"os"
@@ -53,14 +54,13 @@ func ConfigProvider(cfg *fabric.Configuration) (*Config, error) {
 }
 
 func Factory(cfg *Config) (*slog.Logger, error) {
-	/*
-		var ll slog.Level
+	var ll slog.Level
 
-		err := ll.UnmarshalText([]byte(cfg.Level))
-		if err != nil {
-			return nil, fmt.Errorf("failed to parse logger level: %w", err)
-		}
-	*/
+	err := ll.UnmarshalText([]byte(cfg.Level))
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse logger level: %w", err)
+	}
+
 	var output io.Writer
 
 	switch cfg.Stdout {
@@ -72,17 +72,22 @@ func Factory(cfg *Config) (*slog.Logger, error) {
 		output = os.Stdout
 	}
 
+	opts := &slog.HandlerOptions{
+		Level:     ll,
+		AddSource: true,
+	}
+
 	var h slog.Handler
 
 	// nolint: exhaustive // OutputFormatAuto is default
 	switch cfg.Format {
 	case OutputFormatJSON:
-		h = slog.NewJSONHandler(output, nil)
+		h = slog.NewJSONHandler(output, opts)
 
 	case OutputFormatConsole:
-		h = slog.NewTextHandler(output, nil)
+		h = slog.NewTextHandler(output, opts)
 	default:
-		h = slog.NewJSONHandler(output, nil)
+		h = slog.NewJSONHandler(output, opts)
 	}
 
 	logger := slog.New(h)
