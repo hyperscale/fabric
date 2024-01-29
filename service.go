@@ -131,6 +131,11 @@ func (s *Service) Start() error {
 
 	<-s.signal
 
+	// TODO: Add graceful shutdown timeout with context
+	// TODO: configure shutdown timeout with config
+	ctx, cancel := context.WithTimeout(ctx, time.Second)
+	defer cancel()
+
 	// Reversing order for closing
 	for i := len(bootables)/2 - 1; i >= 0; i-- {
 		opp := len(bootables) - 1 - i
@@ -144,6 +149,7 @@ func (s *Service) Start() error {
 
 		sl.DebugContext(ctx, "Stopping provider")
 
+		// TODO: forward ctx to provider.Stop
 		if err := provider.Stop(); err != nil {
 			sl.ErrorContext(ctx, "Stop failed", slog.Any("error", err))
 		}
