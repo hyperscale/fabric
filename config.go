@@ -14,6 +14,8 @@ var (
 	ErrProviderNotFound = fmt.Errorf("provider not found")
 )
 
+var ConfigPath string
+
 var ConfigSet = wire.NewSet(NewConfiguration)
 
 type Configuration struct {
@@ -21,14 +23,18 @@ type Configuration struct {
 	providers map[string]*config.Provider
 }
 
-func NewConfiguration() (*Configuration, error) {
-	cfg := &Configuration{
+func NewConfiguration() (cfg *Configuration, err error) {
+	cfg = &Configuration{
 		parser: config.NewParser(nil),
 	}
 
-	configDir, err := os.Getwd()
-	if err != nil {
-		return nil, fmt.Errorf("failed to get current dir: %w", err)
+	configDir := ConfigPath
+
+	if configDir == "" {
+		configDir, err = os.Getwd()
+		if err != nil {
+			return nil, fmt.Errorf("failed to get current dir: %w", err)
+		}
 	}
 
 	module, diags := cfg.parser.LoadConfigDir(configDir)
