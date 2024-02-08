@@ -4,7 +4,7 @@ go 1.21
 
 require (
 	github.com/go-sql-driver/mysql v1.7.1
-	github.com/google/wire v0.5.0
+	github.com/google/wire v0.6.0
 	github.com/hashicorp/hcl/v2 v2.19.1
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/rs/zerolog v1.32.0
@@ -24,6 +24,6 @@ require (
 	github.com/mattn/go-isatty v0.0.19 // indirect
 	github.com/mitchellh/go-wordwrap v0.0.0-20150314170334-ad45545899c7 // indirect
 	go.opentelemetry.io/otel/trace v1.23.1 // indirect
-	golang.org/x/sys v0.15.0 // indirect
+	golang.org/x/sys v0.16.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 )
