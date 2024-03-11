@@ -3,7 +3,7 @@ module github.com/hyperscale/fabric
 go 1.21
 
 require (
-	github.com/go-sql-driver/mysql v1.7.1
+	github.com/go-sql-driver/mysql v1.8.0
 	github.com/google/wire v0.6.0
 	github.com/hashicorp/hcl/v2 v2.20.0
 	github.com/jmoiron/sqlx v1.3.5
@@ -15,6 +15,7 @@ require (
 )
 
 require (
+	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/agext/levenshtein v1.2.1 // indirect
 	github.com/apparentlymart/go-textseg/v15 v15.0.0 // indirect
 	github.com/go-logr/logr v1.4.1 // indirect
