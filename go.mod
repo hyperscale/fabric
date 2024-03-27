@@ -3,7 +3,7 @@ module github.com/hyperscale/fabric
 go 1.21
 
 require (
-	github.com/go-sql-driver/mysql v1.8.0
+	github.com/go-sql-driver/mysql v1.8.1
 	github.com/google/wire v0.6.0
 	github.com/hashicorp/hcl/v2 v2.20.0
 	github.com/jmoiron/sqlx v1.3.5
