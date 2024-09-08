@@ -54,6 +54,7 @@ func ConfigProvider(cfg *fabric.Configuration) (*Config, error) {
 }
 
 func Factory(cfg *Config) (*slog.Logger, error) {
+
 	var ll slog.Level
 
 	err := ll.UnmarshalText([]byte(cfg.Level))
@@ -75,6 +76,15 @@ func Factory(cfg *Config) (*slog.Logger, error) {
 	opts := &slog.HandlerOptions{
 		Level:     ll,
 		AddSource: true,
+		ReplaceAttr: func(groups []string, a slog.Attr) slog.Attr {
+			if a.Key == slog.SourceKey {
+				return slog.String("log.origin.file.name", a.Value.String())
+			} else if a.Key == slog.TimeKey {
+				return slog.String("@timestamp", a.Value.String())
+			}
+
+			return a
+		},
 	}
 
 	var h slog.Handler
