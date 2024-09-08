@@ -71,15 +71,25 @@ linters-settings:
     ignore-generated-header: true
     severity: warning
 output:
-  format: colored-line-number
+  formats:
+    - format: colored-line-number
   print-issued-lines: true
   print-linter-name: true
+
 run:
   concurrency: 4
   issues-exit-code: 1
-  skip-files:
+  tests: false
+  timeout: 1m
+
+issues:
+  exclude-use-default: true
+  exclude-case-sensitive: false
+  exclude-dirs-use-default: true
+  max-issues-per-linter: 50
+  exclude-generated: strict
+  exclude-files:
     - .*_mock\.go
     - mock_.*\.go
     - .*/pkg/mod/.*$
-  tests: false
-  timeout: 1m
+    - .*/go/src/.*\.go
