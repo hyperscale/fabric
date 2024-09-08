@@ -54,7 +54,6 @@ func ConfigProvider(cfg *fabric.Configuration) (*Config, error) {
 }
 
 func Factory(cfg *Config) (*slog.Logger, error) {
-
 	var ll slog.Level
 
 	err := ll.UnmarshalText([]byte(cfg.Level))
