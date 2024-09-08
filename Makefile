@@ -24,7 +24,7 @@ $(BUILD_DIR)/coverage.out: _build $(GO_FILES)
 lint:
 ifeq (, $(shell which golangci-lint))
 	@echo "Install golangci-lint..."
-	@curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s -- -b ${GOPATH}/bin v1.60.3
+	@go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.60.3
 endif
 	@echo "lint..."
 	@golangci-lint run --timeout=300s ./...
