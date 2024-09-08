@@ -2,14 +2,12 @@ linters:
   disable-all: true
   enable:
     - errcheck
-    - gas
     - goconst
     - gocyclo
     - gofmt
     - revive
     - govet
     - ineffassign
-    - megacheck
     - misspell
     - typecheck
     - unconvert
@@ -22,7 +20,6 @@ linters:
     - durationcheck
     - errorlint
     - exhaustive
-    - exportloopref
     - forbidigo
     - forcetypeassert
     - gocritic
