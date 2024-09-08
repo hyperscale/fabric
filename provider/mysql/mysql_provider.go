@@ -5,6 +5,7 @@ import (
 	"log/slog"
 	"net"
 	"strconv"
+	"time"
 
 	sqldriver "github.com/go-sql-driver/mysql"
 	"github.com/google/wire"
@@ -28,11 +29,14 @@ type Config struct {
 
 func (c *Config) FormatDSN() string {
 	sqlCfg := sqldriver.Config{
+		Loc:                  time.UTC,
+		Net:                  "tcp",
 		Addr:                 net.JoinHostPort(c.Host, strconv.Itoa(c.Port)),
 		User:                 c.Username,
 		Passwd:               c.Password,
 		DBName:               c.Database,
 		AllowNativePasswords: true,
+		CheckConnLiveness:    true,
 		ParseTime:            true,
 	}
 
