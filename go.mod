@@ -12,8 +12,8 @@ require (
 	github.com/spf13/afero v1.12.0
 	github.com/stretchr/testify v1.10.0
 	github.com/zclconf/go-cty v1.16.1
-	go.opentelemetry.io/otel v1.33.0
-	go.opentelemetry.io/otel/metric v1.33.0
+	go.opentelemetry.io/otel v1.34.0
+	go.opentelemetry.io/otel/metric v1.34.0
 )
 
 require (
@@ -29,7 +29,7 @@ require (
 	github.com/mitchellh/go-wordwrap v0.0.0-20150314170334-ad45545899c7 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	go.opentelemetry.io/auto/sdk v1.1.0 // indirect
-	go.opentelemetry.io/otel/trace v1.33.0 // indirect
+	go.opentelemetry.io/otel/trace v1.34.0 // indirect
 	golang.org/x/mod v0.17.0 // indirect
 	golang.org/x/sync v0.10.0 // indirect
 	golang.org/x/sys v0.29.0 // indirect
