@@ -11,7 +11,7 @@ require (
 	github.com/rs/zerolog v1.33.0
 	github.com/spf13/afero v1.12.0
 	github.com/stretchr/testify v1.10.0
-	github.com/zclconf/go-cty v1.16.1
+	github.com/zclconf/go-cty v1.16.2
 	go.opentelemetry.io/otel v1.34.0
 	go.opentelemetry.io/otel/metric v1.34.0
 )
