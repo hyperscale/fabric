@@ -4,7 +4,7 @@ go 1.21
 toolchain go1.24.1
 
 require (
-	github.com/go-sql-driver/mysql v1.9.0
+	github.com/go-sql-driver/mysql v1.9.1
 	github.com/google/wire v0.6.0
 	github.com/hashicorp/hcl/v2 v2.23.0
 	github.com/jmoiron/sqlx v1.4.0
