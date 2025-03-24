@@ -76,13 +76,14 @@ func Factory(cfg *Config) (*slog.Logger, error) {
 		Level:     ll,
 		AddSource: true,
 		ReplaceAttr: func(groups []string, a slog.Attr) slog.Attr {
-			if a.Key == slog.SourceKey {
+			switch a.Key {
+			case slog.SourceKey:
 				return slog.String("log.origin.file.name", a.Value.String())
-			} else if a.Key == slog.TimeKey {
+			case slog.TimeKey:
 				return slog.String("@timestamp", a.Value.String())
+			default:
+				return a
 			}
-
-			return a
 		},
 	}
 
