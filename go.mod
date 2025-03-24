@@ -8,7 +8,7 @@ require (
 	github.com/google/wire v0.6.0
 	github.com/hashicorp/hcl/v2 v2.23.0
 	github.com/jmoiron/sqlx v1.4.0
-	github.com/rs/zerolog v1.33.0
+	github.com/rs/zerolog v1.34.0
 	github.com/spf13/afero v1.14.0
 	github.com/stretchr/testify v1.10.0
 	github.com/zclconf/go-cty v1.16.2
