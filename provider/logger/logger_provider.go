@@ -10,7 +10,7 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/google/wire"
+	"github.com/euskadi31/wire"
 	"github.com/hyperscale/fabric"
 )
 

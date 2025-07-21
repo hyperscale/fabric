@@ -10,7 +10,7 @@ import (
 	stdlog "log"
 	"os"
 
-	"github.com/google/wire"
+	"github.com/euskadi31/wire"
 	"github.com/hyperscale/fabric"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"

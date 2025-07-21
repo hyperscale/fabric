@@ -4,7 +4,7 @@
 package app
 
 import (
-	"github.com/google/wire"
+	"github.com/euskadi31/wire"
 	"github.com/hyperscale/fabric"
 	"github.com/hyperscale/fabric/provider/logger"
 	"github.com/hyperscale/fabric/provider/mysql"

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/google/wire"
+	"github.com/euskadi31/wire"
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/gohcl"
 	"github.com/hyperscale/fabric/config"

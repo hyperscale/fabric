@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/euskadi31/wire"
 	sqldriver "github.com/go-sql-driver/mysql"
-	"github.com/google/wire"
 	"github.com/hyperscale/fabric"
 	"github.com/jmoiron/sqlx"
 )

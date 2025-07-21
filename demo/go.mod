@@ -8,7 +8,7 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/go-logr/logr v1.2.3 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
-	github.com/google/wire v0.5.0 // indirect
+	github.com/euskadi31/wire v0.7.1 // indirect
 	github.com/hashicorp/hcl/v2 v2.16.2 // indirect
 	github.com/jmoiron/sqlx v1.3.5 // indirect
 	github.com/mitchellh/go-wordwrap v1.0.1 // indirect
