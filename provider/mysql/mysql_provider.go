@@ -58,7 +58,7 @@ func Factory(logger *slog.Logger, cfg *Config) (*sqlx.DB, error) {
 		cfg.FormatDSN(),
 	)
 	if err != nil {
-		logger.Error("MySQLFactory failed", slog.Any("error", err))
+		logger.Error("MySQLFactory failed", slog.Any("error", err)) // nolint: noctx
 
 		return nil, fmt.Errorf("mysql factory: %w", err)
 	}

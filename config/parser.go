@@ -43,7 +43,6 @@ func (p *Parser) Context() *hcl.EvalContext {
 // Parse config.
 func (p *Parser) Parse(filename string, src []byte) (*File, hcl.Diagnostics) {
 	f, diags := hclsyntax.ParseConfig(src, filename, hcl.Pos{Line: 1, Column: 1})
-
 	if diags.HasErrors() {
 		return nil, diags
 	}
