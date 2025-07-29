@@ -2,6 +2,8 @@ package config
 
 import (
 	"fmt"
+	"os"
+	"strings"
 
 	"github.com/hashicorp/hcl/v2"
 	"github.com/zclconf/go-cty/cty"
@@ -10,10 +12,22 @@ import (
 	ctyjson "github.com/zclconf/go-cty/cty/json"
 )
 
+func readEnvVariables() map[string]cty.Value {
+	envVars := make(map[string]cty.Value)
+	for _, env := range os.Environ() {
+		parts := strings.SplitN(env, "=", 2)
+		if len(parts) == 2 {
+			envVars[parts[0]] = cty.StringVal(parts[1])
+		}
+	}
+
+	return envVars
+}
+
 func createEvalContext() *hcl.EvalContext {
 	variables := map[string]cty.Value{
 		"var": cty.ObjectVal(map[string]cty.Value{}),
-		"env": cty.ObjectVal(map[string]cty.Value{}),
+		"env": cty.ObjectVal(readEnvVariables()),
 	}
 
 	functions := map[string]function.Function{
