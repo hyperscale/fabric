@@ -14,6 +14,7 @@ import (
 
 func readEnvVariables() map[string]cty.Value {
 	envVars := make(map[string]cty.Value)
+
 	for _, env := range os.Environ() {
 		parts := strings.SplitN(env, "=", 2)
 		if len(parts) == 2 {
