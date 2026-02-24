@@ -1,6 +1,6 @@
 module github.com/hyperscale/fabric
 
-go 1.24
+go 1.25
 
 require (
 	github.com/euskadi31/wire v0.7.1
@@ -10,7 +10,7 @@ require (
 	github.com/rs/zerolog v1.34.0
 	github.com/spf13/afero v1.15.0
 	github.com/stretchr/testify v1.11.1
-	github.com/zclconf/go-cty v1.17.0
+	github.com/zclconf/go-cty v1.18.0
 	go.opentelemetry.io/otel v1.38.0
 	go.opentelemetry.io/otel/metric v1.38.0
 )
