@@ -25,7 +25,7 @@ func TestProvider_Name(t *testing.T) {
 	dispatcher, _ := Factory()
 	provider := NewProvider(dispatcher)
 
-	assert.Equal(t, ProviderName, provider.Name())
+	assert.Equal(t, providerName, provider.Name())
 	assert.Equal(t, "eventemitter", provider.Name())
 }
 
@@ -69,5 +69,5 @@ func TestProvider_StopAfterEmit(t *testing.T) {
 }
 
 func TestProviderName_Constant(t *testing.T) {
-	assert.Equal(t, "eventemitter", ProviderName)
+	assert.Equal(t, "eventemitter", providerName)
 }
