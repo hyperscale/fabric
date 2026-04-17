@@ -10,7 +10,7 @@ require (
 	github.com/rs/zerolog v1.35.0
 	github.com/spf13/afero v1.15.0
 	github.com/stretchr/testify v1.11.1
-	github.com/zclconf/go-cty v1.18.0
+	github.com/zclconf/go-cty v1.18.1
 	go.opentelemetry.io/otel v1.43.0
 	go.opentelemetry.io/otel/metric v1.43.0
 )
