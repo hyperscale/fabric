@@ -4,7 +4,7 @@ go 1.25.0
 
 require (
 	github.com/euskadi31/wire v0.7.1
-	github.com/go-sql-driver/mysql v1.9.3
+	github.com/go-sql-driver/mysql v1.10.0
 	github.com/hashicorp/hcl/v2 v2.24.0
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/rs/zerolog v1.35.1
