@@ -6,7 +6,7 @@ require (
 	github.com/euskadi31/wire v0.7.1
 	github.com/hyperscale/fabric v0.0.0-20260319163254-aa0e071ccc95
 	github.com/rs/zerolog v1.35.1
-	github.com/samber/slog-zerolog/v2 v2.9.1
+	github.com/samber/slog-zerolog/v2 v2.9.2
 	github.com/stretchr/testify v1.11.1
 	go.opentelemetry.io/contrib/bridges/otelslog v0.17.0
 	go.opentelemetry.io/otel/sdk/log v0.18.0
@@ -26,8 +26,8 @@ require (
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mitchellh/go-wordwrap v1.0.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/samber/lo v1.52.0 // indirect
-	github.com/samber/slog-common v0.20.0 // indirect
+	github.com/samber/lo v1.53.0 // indirect
+	github.com/samber/slog-common v0.21.0 // indirect
 	github.com/spf13/afero v1.15.0 // indirect
 	github.com/zclconf/go-cty v1.18.1 // indirect
 	go.opentelemetry.io/auto/sdk v1.2.1 // indirect
