@@ -9,6 +9,7 @@ import (
 	"github.com/hyperscale/fabric/provider/mysql"
 )
 
+// nolint:unused
 var applicationSet = wire.NewSet(
 	wire.Struct(new(Options), "*"),
 	NewApplication,

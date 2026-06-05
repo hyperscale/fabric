@@ -18,6 +18,8 @@ const (
 	ExporterTypeStdout ExporterType = "stdout"
 )
 
+const defaultGRPCEndpoint = "localhost:4317"
+
 type Config struct {
 	Trace                 *TraceConfig  `hcl:"trace,block"`
 	Metric                *MetricConfig `hcl:"metric,block"`
@@ -82,7 +84,7 @@ func ConfigProvider(cfg *fabric.Configuration) (*Config, error) {
 			Exporter:     ExporterTypeStdout,
 			BatchTimeout: 5 * time.Second, // default batch timeout
 			GRPC: &GRPCConfig{
-				Endpoint: "localhost:4317",
+				Endpoint: defaultGRPCEndpoint,
 				Insecure: true,
 				Timeout:  10 * time.Second, // default timeout
 			},
@@ -92,7 +94,7 @@ func ConfigProvider(cfg *fabric.Configuration) (*Config, error) {
 			Exporter: ExporterTypeStdout,
 			Interval: 10 * time.Second, // default interval
 			GRPC: &GRPCConfig{
-				Endpoint: "localhost:4317",
+				Endpoint: defaultGRPCEndpoint,
 				Insecure: true,
 				Timeout:  10 * time.Second, // default timeout
 			},
@@ -101,7 +103,7 @@ func ConfigProvider(cfg *fabric.Configuration) (*Config, error) {
 			Enabled:  true,
 			Exporter: ExporterTypeStdout,
 			GRPC: &GRPCConfig{
-				Endpoint: "localhost:4317",
+				Endpoint: defaultGRPCEndpoint,
 				Insecure: true,
 				Timeout:  10 * time.Second, // default timeout
 			},
