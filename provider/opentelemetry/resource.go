@@ -7,7 +7,7 @@ import (
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/sdk/resource"
-	semconv "go.opentelemetry.io/otel/semconv/v1.40.0"
+	semconv "go.opentelemetry.io/otel/semconv/v1.41.0"
 )
 
 var OTelResourceSet = wire.NewSet(ResourceFactory)
@@ -28,7 +28,7 @@ func ResourceFactory(cfg *Config, prop propagation.TextMapPropagator) (*resource
 		resource.WithAttributes(
 			semconv.ServiceNameKey.String(cfg.ServiceName),
 			semconv.ServiceVersionKey.String(cfg.ServiceVersion),
-			semconv.DeploymentEnvironmentName(cfg.DeploymentEnvironment),
+			semconv.DeploymentEnvironmentNameKey.String(cfg.DeploymentEnvironment),
 		),
 	)
 }
