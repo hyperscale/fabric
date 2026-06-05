@@ -16,7 +16,7 @@ _build:
 	@mkdir -p ${BUILD_DIR}
 
 $(BUILD_DIR)/coverage.out: _build $(GO_FILES)
-	@go test -cover -race -coverprofile $(BUILD_DIR)/coverage.out.tmp -timeout 300s ./...
+	@go list -f '{{.Dir}}/...' -m | xargs go test -count=1 -cover -race -coverprofile $(BUILD_DIR)/coverage.out.tmp -timeout 300s
 	@cat $(BUILD_DIR)/coverage.out.tmp | grep -v '.pb.go' | grep -v 'mock_' > $(BUILD_DIR)/coverage.out
 	@rm $(BUILD_DIR)/coverage.out.tmp
 
@@ -27,7 +27,7 @@ ifeq (, $(shell which golangci-lint))
 	@go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.60.3
 endif
 	@echo "lint..."
-	@golangci-lint run --timeout=300s ./...
+	@go list -f '{{.Dir}}/...' -m | xargs golangci-lint run --timeout=300s
 
 .PHONY: test
 test: $(BUILD_DIR)/coverage.out
@@ -44,3 +44,10 @@ coverage-html: $(BUILD_DIR)/coverage.out
 generate: $(GO_FILES)
 	@go generate ./...
 
+.PHONY: update-go-deps
+update-go-deps:
+	@echo "Updating Go dependencies in all workspace modules..."
+	@go list -f '{{.Dir}}' -m | while read -r dir; do \
+		echo "==> $$dir"; \
+		(cd "$$dir" && go get -u ./... && go mod tidy) || exit 1; \
+	done
