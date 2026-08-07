@@ -1,0 +1,3 @@
+provider "logger" {
+  level = "debug"
+}

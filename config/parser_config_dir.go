@@ -94,7 +94,16 @@ func (p *Parser) loadFiles(paths []string, override bool) ([]*File, hcl.Diagnost
 func (p *Parser) dirFiles(dir string) (primary, override []string, diags hcl.Diagnostics) {
 	infos := map[string]os.FileInfo{}
 
+	// The walk error must be propagated: afero.Walk reports an unreadable or
+	// missing root by calling this function once with a nil FileInfo and a
+	// non-nil error. Swallowing it stored a nil info and the loop below then
+	// dereferenced it, so a wrong config path crashed the process instead of
+	// producing a diagnostic.
 	if err := p.fs.Walk(dir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
 		infos[path] = info
 
 		return nil
@@ -102,7 +111,7 @@ func (p *Parser) dirFiles(dir string) (primary, override []string, diags hcl.Dia
 		diags = append(diags, &hcl.Diagnostic{
 			Severity: hcl.DiagError,
 			Summary:  "Failed to read module directory",
-			Detail:   fmt.Sprintf("Module directory %s does not exist or cannot be read.", dir),
+			Detail:   fmt.Sprintf("Module directory %s does not exist or cannot be read: %s.", dir, err),
 		})
 
 		return

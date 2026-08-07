@@ -14,7 +14,8 @@
       "Bash(echo \"exit=$?\")",
       "Bash(rtk docker *)",
       "Bash(rtk git *)",
-      "Bash(rtk proxy *)"
+      "Bash(rtk proxy *)",
+      "Bash(rtk find *)"
     ]
   }
 }

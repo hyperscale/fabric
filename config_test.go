@@ -30,6 +30,22 @@ func TestConfiguration(t *testing.T) {
 	assert.Equal(t, 8080, testCfg.Port)
 }
 
+// A wrong ConfigPath, or a binary started from the wrong working directory, is
+// an ordinary misconfiguration. It used to crash the process with a nil pointer
+// dereference inside the directory walk instead of returning an error.
+func TestNewConfigurationFromDir_MissingDirectory(t *testing.T) {
+	var (
+		cfg *Configuration
+		err error
+	)
+
+	require.NotPanics(t, func() { cfg, err = NewConfigurationFromDir("./testdata/does-not-exist") })
+
+	require.Error(t, err)
+	assert.Nil(t, cfg)
+	assert.Contains(t, err.Error(), "does not exist or cannot be read")
+}
+
 func TestConfiguration_HasProvider(t *testing.T) {
 	cfg, err := NewConfigurationFromDir("./testdata/cfg_with_env_vars/config.hcl")
 	require.NoError(t, err)
