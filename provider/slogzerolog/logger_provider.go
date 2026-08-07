@@ -1,6 +1,7 @@
 package logger
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"log/slog"
@@ -57,8 +58,10 @@ func ConfigProvider(cfg *fabric.Configuration) (*Config, error) {
 		AddSource: false,
 	}
 
-	if err := cfg.ParseProvider(providerName, c); err != nil {
-		return c, nil // nolint: nilerr // return default config if parsing failed
+	// An absent block keeps the defaults above; a present but malformed one is
+	// fatal, so a typo cannot silently degrade to the default configuration.
+	if err := cfg.ParseProvider(providerName, c); err != nil && !errors.Is(err, fabric.ErrProviderNotFound) {
+		return nil, fmt.Errorf("failed to parse %s config: %w", providerName, err)
 	}
 
 	return c, nil

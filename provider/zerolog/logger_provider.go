@@ -5,6 +5,7 @@
 package zerolog
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	stdlog "log"
@@ -48,8 +49,10 @@ func ConfigProvider(cfg *fabric.Configuration) (*Config, error) {
 		Stdout: StdOutputStdout,
 	}
 
-	if err := cfg.ParseProvider(ProviderName, c); err != nil {
-		return c, nil // nolint: nilerr // return default config if parsing failed
+	// An absent block keeps the defaults above; a present but malformed one is
+	// fatal, so a typo cannot silently degrade to the default configuration.
+	if err := cfg.ParseProvider(ProviderName, c); err != nil && !errors.Is(err, fabric.ErrProviderNotFound) {
+		return nil, fmt.Errorf("failed to parse %s config: %w", ProviderName, err)
 	}
 
 	return c, nil
