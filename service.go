@@ -354,7 +354,18 @@ func (s *Service) Run(ctx context.Context) error {
 //
 // ctx bounds the whole drain, not each provider: once it expires the remaining
 // Stop calls return immediately with ctx.Err().
+//
+// If ctx carries no deadline the configured shutdown timeout is applied, so the
+// drain is always bounded. Passing a context.Background() must not silently
+// discard the budget the service was configured with.
 func (s *Service) Shutdown(ctx context.Context) error {
+	if _, hasDeadline := ctx.Deadline(); !hasDeadline && s.shutdownTimeout > 0 {
+		bounded, cancel := context.WithTimeout(ctx, s.shutdownTimeout)
+		defer cancel()
+
+		ctx = bounded
+	}
+
 	return s.shutdown(ctx)
 }
 

@@ -19,13 +19,22 @@ type Options struct {
 	MySQLProvider *mysql.Provider
 }
 
-func NewApplication(logger *slog.Logger, opts *Options) (*fabric.Service, error) {
+func NewApplication(
+	logger *slog.Logger,
+	cfg *fabric.ServiceConfig,
+	readiness *fabric.Readiness,
+	opts *Options,
+) (*fabric.Service, error) {
 	logger.Debug("Starting Fabric Application")
 
 	s, err := fabric.NewService(
 		fabric.WithName("acme-a-consumer"),
 		fabric.WithVersion("0.0.1"),
 		fabric.WithLogger(logger),
+		fabric.WithReadiness(readiness),
+		// Last, so the `service` block of config.hcl overrides the defaults
+		// above.
+		fabric.WithConfig(cfg),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create service: %w", err)

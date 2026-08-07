@@ -11,5 +11,12 @@ import (
 )
 
 func New() (*fabric.Service, error) {
-	panic(wire.Build(fabric.ConfigSet, logger.Set, mysql.Set, applicationSet))
+	panic(wire.Build(
+		fabric.ConfigSet,
+		fabric.ServiceConfigSet,
+		fabric.ReadinessSet,
+		logger.Set,
+		mysql.Set,
+		applicationSet,
+	))
 }

@@ -42,11 +42,11 @@ const (
 )
 
 type Config struct {
-	Level     string       `hcl:"level"`
-	Provider  ProviderType `hcl:"provider"`
-	Format    OutputFormat `hcl:"format"`
-	Stdout    StdOutput    `hcl:"stdout"`
-	AddSource bool         `hcl:"add_source"`
+	Level     string       `hcl:"level,optional"`
+	Provider  ProviderType `hcl:"provider,optional"`
+	Format    OutputFormat `hcl:"format,optional"`
+	Stdout    StdOutput    `hcl:"stdout,optional"`
+	AddSource bool         `hcl:"add_source,optional"`
 }
 
 func ConfigProvider(cfg *fabric.Configuration) (*Config, error) {
