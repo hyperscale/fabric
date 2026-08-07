@@ -5,7 +5,7 @@ go 1.25.0
 require (
 	github.com/euskadi31/go-eventemitter v1.1.1
 	github.com/euskadi31/wire v0.7.1
-	github.com/hyperscale/fabric v0.0.0-20260529054944-3a685e8323e8
+	github.com/hyperscale/fabric v0.0.0-20260807225851-492465699b17
 	github.com/stretchr/testify v1.11.1
 )
 

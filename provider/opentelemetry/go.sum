@@ -29,8 +29,8 @@ github.com/grpc-ecosystem/grpc-gateway/v2 v2.29.0 h1:5VipnvEpbqr2gA2VbM+nYVbkIF2
 github.com/grpc-ecosystem/grpc-gateway/v2 v2.29.0/go.mod h1:Hyl3n6Twe1hvtd9XUXDec4pTvgMSEixRuQKPTMH2bNs=
 github.com/hashicorp/hcl/v2 v2.24.0 h1:2QJdZ454DSsYGoaE6QheQZjtKZSUs9Nh2izTWiwQxvE=
 github.com/hashicorp/hcl/v2 v2.24.0/go.mod h1:oGoO1FIQYfn/AgyOhlg9qLC6/nOJPX3qGbkZpYAcqfM=
-github.com/hyperscale/fabric v0.0.0-20260529054944-3a685e8323e8 h1:Jxbjet8VRSlJD0qVcEsKQcLFgR+MYQAHW4/h9df0I1I=
-github.com/hyperscale/fabric v0.0.0-20260529054944-3a685e8323e8/go.mod h1:4YCvlb+IzuVXtlVAc7K2rH9qtqXXXMpFYgW3G+7O5Ng=
+github.com/hyperscale/fabric v0.0.0-20260807225851-492465699b17 h1:VnTPcoY9VcWWmDW4HBCuTqHmjnoVSJX+XTjUXqziuSE=
+github.com/hyperscale/fabric v0.0.0-20260807225851-492465699b17/go.mod h1:q0Kbp+3CE9GpoFHZeBnYi94+4hyMAdFX2sQPIs6nHfU=
 github.com/kr/pretty v0.3.1 h1:flRD4NNwYAUpkphVc1HcthR4KEIFJ65n8Mw5qdRn3LE=
 github.com/kr/pretty v0.3.1/go.mod h1:hoEshYVHaxMs3cyo3Yncou5ZscifuDolrwPKZanG3xk=
 github.com/kr/text v0.2.0 h1:5Nx0Ya0ZqY2ygV366QzturHI13Jq95ApcVaJBhpS+AY=
