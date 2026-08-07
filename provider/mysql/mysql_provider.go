@@ -44,6 +44,8 @@ func (c *Config) FormatDSN() string {
 }
 
 func ConfigProvider(cfg *fabric.Configuration) (*Config, error) {
+	// The mysql block is required: there is no sensible default DSN, so both an
+	// absent and a malformed block are fatal.
 	c := &Config{}
 	if err := cfg.ParseProvider(ProviderName, c); err != nil {
 		return nil, fmt.Errorf("failed to parse mysql config: %w", err)

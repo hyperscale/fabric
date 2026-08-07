@@ -1,6 +1,8 @@
 package otel
 
 import (
+	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 	"time"
@@ -8,6 +10,9 @@ import (
 	"github.com/euskadi31/wire"
 	"github.com/hyperscale/fabric"
 )
+
+// ProviderName is the name of the HCL provider block this package reads.
+const ProviderName = "opentelemetry"
 
 var OTelConfigSet = wire.NewSet(ConfigProvider)
 
@@ -110,8 +115,10 @@ func ConfigProvider(cfg *fabric.Configuration) (*Config, error) {
 		},
 	}
 
-	if err := cfg.ParseProvider("opentelemetry", c); err != nil {
-		return c, nil // nolint: nilerr // return default config if parsing failed
+	// An absent block keeps the defaults above; a present but malformed one is
+	// fatal, so a typo cannot silently degrade to the default configuration.
+	if err := cfg.ParseProvider(ProviderName, c); err != nil && !errors.Is(err, fabric.ErrProviderNotFound) {
+		return nil, fmt.Errorf("failed to parse %s config: %w", ProviderName, err)
 	}
 
 	return c, nil
