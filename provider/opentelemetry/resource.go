@@ -7,7 +7,10 @@ import (
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/sdk/resource"
-	semconv "go.opentelemetry.io/otel/semconv/v1.41.0"
+	// Must match the semconv version used by go.opentelemetry.io/otel/sdk/resource,
+	// otherwise resource.WithTelemetrySDK() and WithSchemaURL() below disagree and
+	// resource.New fails with "conflicting Schema URL".
+	semconv "go.opentelemetry.io/otel/semconv/v1.43.0"
 )
 
 var OTelResourceSet = wire.NewSet(ResourceFactory)

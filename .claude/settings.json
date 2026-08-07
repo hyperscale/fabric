@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(golangci-lint --version)",
+      "Bash(rtk read *)",
+      "Bash(echo \"=== EXIT $? ===\")",
+      "Bash(rtk go *)",
+      "Bash(rtk grep *)",
+      "Bash(echo \"=== BUILD EXIT: $? ===\")",
+      "Bash(rtk ls *)",
+      "Bash(rtk make *)",
+      "Bash(git add *)",
+      "Bash(git commit *)"
+    ]
+  }
+}
