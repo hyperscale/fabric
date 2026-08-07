@@ -15,7 +15,9 @@
       "Bash(rtk docker *)",
       "Bash(rtk git *)",
       "Bash(rtk proxy *)",
-      "Bash(rtk find *)"
+      "Bash(rtk find *)",
+      "Bash(gh pr *)",
+      "Bash(rtk gh *)"
     ]
   }
 }
