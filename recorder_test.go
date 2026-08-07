@@ -3,10 +3,37 @@ package fabric
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"sync"
 	"sync/atomic"
 	"testing"
 )
+
+// testService builds a Service with a quiet logger and the given options.
+func testService(t *testing.T, opts ...ServiceOption) *Service {
+	t.Helper()
+
+	opts = append([]ServiceOption{
+		WithName("test"),
+		WithVersion("0.0.0"),
+		WithLogger(slog.New(slog.DiscardHandler)),
+	}, opts...)
+
+	svc, err := NewService(opts...)
+	if err != nil {
+		t.Fatalf("NewService: %v", err)
+	}
+
+	return svc
+}
+
+func mustRegister(t *testing.T, svc *Service, providers ...BootableProvider) {
+	t.Helper()
+
+	if err := svc.Register(providers...); err != nil {
+		t.Fatalf("Register: %v", err)
+	}
+}
 
 // recorder is an ordered, concurrency-safe event log. The lifecycle tests assert
 // against an exact []string of its contents, which is what freezes the startup
