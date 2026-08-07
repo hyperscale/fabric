@@ -100,6 +100,16 @@ immediately with `context.DeadlineExceeded` and are named in the joined error â€
 `Shutdown` is guaranteed to return by the deadline even against a provider that
 ignores its context.
 
+A provider that ignores its context also keeps its `Stop` goroutine alive after
+the deadline: Fabric cannot kill it, so it is deliberately abandoned. That is
+acceptable because a drain precedes process exit, but it means a test draining a
+wedged provider should release it in a `t.Cleanup`.
+
+A panic in `Start`, `Run` or `Stop` is recovered and converted into an error
+wrapping `ErrPanic`, carrying the panic value and the stack of the panic site. A
+panicking `Start` therefore unwinds like any other boot failure instead of
+killing the process with every already-started provider left open.
+
 | Method | Behavior |
 | --- | --- |
 | `Start(ctx)` | boots and returns; does **not** block for the process lifetime |

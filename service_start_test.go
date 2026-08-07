@@ -109,6 +109,64 @@ func TestService_Start_FailureUnwindsInReverse(t *testing.T) {
 	assert.False(t, rec.contains("b:stop"), "the failing provider must not be stopped")
 }
 
+// A panic in Start must unwind like any other boot failure. Left unrecovered it
+// would kill the process at the panic frame, leaving every already-started
+// provider open: no pool closed, no telemetry flushed.
+func TestService_Start_PanicUnwindsInReverse(t *testing.T) {
+	rec := newRecorder()
+	svc := testService(t)
+
+	a := newFakeProvider(rec, "a", PriorityTelemetry)
+	b := newFakeProvider(rec, "b", PriorityDatabase)
+	b.onStart = func(context.Context) { panic("boom in Start") }
+	c := newFakeProvider(rec, "c", PriorityServer)
+
+	mustRegister(t, svc, a, b, c)
+
+	var err error
+
+	require.NotPanics(t, func() { err = svc.Start(t.Context()) })
+
+	require.Error(t, err)
+	assert.ErrorIs(t, err, ErrPanic)
+	assert.Contains(t, err.Error(), "boom in Start")
+	assert.Contains(t, err.Error(), `"b"`)
+
+	assert.Equal(t, []string{
+		"a:start",
+		"b:start",
+		"a:stop",
+		"a:stopped",
+	}, rec.snapshot())
+
+	assert.False(t, rec.contains("c:start"))
+	assert.False(t, svc.Ready())
+}
+
+// The point of paying for a recover is keeping the panic diagnosable, so the
+// error must carry the stack of the panic site and not merely of the helper
+// that recovered it.
+func TestService_Start_PanicErrorCarriesStack(t *testing.T) {
+	rec := newRecorder()
+	svc := testService(t)
+
+	p := newFakeProvider(rec, "a", PriorityDefault)
+	p.onStart = func(context.Context) { panicHere() }
+
+	mustRegister(t, svc, p)
+
+	err := svc.Start(t.Context())
+
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), "panicHere", "the stack does not reach the panic site")
+	assert.Contains(t, err.Error(), "service_start_test.go")
+}
+
+// panicHere gives the stack assertion above a distinctive frame to look for.
+func panicHere() {
+	panic("deliberate")
+}
+
 func TestService_Start_FailureLeavesServiceUnready(t *testing.T) {
 	rec := newRecorder()
 	svc := testService(t)
