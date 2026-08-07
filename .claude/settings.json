@@ -12,7 +12,9 @@
       "Bash(git add *)",
       "Bash(git commit *)",
       "Bash(echo \"exit=$?\")",
-      "Bash(rtk docker *)"
+      "Bash(rtk docker *)",
+      "Bash(rtk git *)",
+      "Bash(rtk proxy *)"
     ]
   }
 }

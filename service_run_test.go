@@ -173,7 +173,9 @@ func TestService_Runnable_PanicIsRecovered(t *testing.T) {
 	select {
 	case err := <-done:
 		require.Error(t, err)
-		assert.Contains(t, err.Error(), "panic")
+		assert.ErrorIs(t, err, ErrPanic)
+		assert.Contains(t, err.Error(), "boom")
+		assert.Contains(t, err.Error(), "recorder_test.go", "the stack does not reach the panic site")
 	case <-time.After(5 * time.Second):
 		t.Fatal("a panicking Run did not trigger the shutdown")
 	}

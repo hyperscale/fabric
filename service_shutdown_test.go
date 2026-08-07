@@ -202,7 +202,8 @@ func TestService_Shutdown_RecoversPanicInStop(t *testing.T) {
 	err := svc.Shutdown(t.Context())
 
 	require.Error(t, err)
-	assert.Contains(t, err.Error(), "panic")
+	assert.ErrorIs(t, err, ErrPanic)
+	assert.Contains(t, err.Error(), `"panicking"`)
 	assert.True(t, rec.contains("telemetry:stopped"), "the remaining providers must still be stopped")
 }
 

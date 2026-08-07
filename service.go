@@ -7,6 +7,7 @@ import (
 	"log/slog"
 	"os"
 	"os/signal"
+	"runtime/debug"
 	"slices"
 	"sync"
 	"syscall"
@@ -36,7 +37,22 @@ var (
 	// name, which would otherwise make logs ambiguous and let the same resource
 	// be stopped twice.
 	ErrDuplicateProvider = errors.New("fabric: duplicate provider")
+
+	// ErrPanic wraps a panic recovered from a provider's Start, Run or Stop. The
+	// error message carries the panic value followed by the stack captured at
+	// the panic site.
+	ErrPanic = errors.New("fabric: provider panicked")
 )
+
+// panicError converts a recovered panic into an error carrying the stack of the
+// panic site.
+//
+// It must be called from the deferred function that recovered: the panicking
+// frames are still on the stack at that point, so debug.Stack sees the site
+// itself and not just this helper.
+func panicError(rec any) error {
+	return fmt.Errorf("%w: %v\n%s", ErrPanic, rec, debug.Stack())
+}
 
 var _ ServiceLifeCycle = (*Service)(nil)
 
@@ -270,7 +286,7 @@ func (s *Service) startOne(ctx context.Context, logger *slog.Logger, provider Bo
 
 	pl.DebugContext(ctx, "Starting provider")
 
-	if err := provider.Start(ctx); err != nil {
+	if err := safeStart(ctx, provider); err != nil {
 		return fmt.Errorf("start provider %q: %w", provider.Name(), err)
 	}
 
@@ -281,6 +297,24 @@ func (s *Service) startOne(ctx context.Context, logger *slog.Logger, provider Bo
 	pl.DebugContext(ctx, "Provider started")
 
 	return nil
+}
+
+// safeStart turns a panic in Start into an ordinary boot error.
+//
+// Without it a panicking provider takes the process down at the panic frame and
+// the already-started providers are never stopped, which contradicts the
+// guarantee that a failed boot unwinds in reverse order. The stack of the panic
+// site is preserved in the error, so a nil dereference in a provider's Start is
+// still diagnosable.
+func safeStart(ctx context.Context, provider BootableProvider) (err error) {
+	defer func() {
+		if rec := recover(); rec != nil {
+			err = panicError(rec)
+		}
+	}()
+
+	// nolint: wrapcheck // the caller wraps with the provider name
+	return provider.Start(ctx)
 }
 
 func (s *Service) beginStart(ctx context.Context) ([]BootableProvider, error) {
@@ -503,7 +537,7 @@ func stopWithin(ctx context.Context, provider BootableProvider) error {
 	go func() {
 		defer func() {
 			if rec := recover(); rec != nil {
-				done <- fmt.Errorf("stop provider %q: panic: %v", provider.Name(), rec)
+				done <- fmt.Errorf("stop provider %q: %w", provider.Name(), panicError(rec))
 			}
 		}()
 
@@ -564,7 +598,7 @@ func (s *Service) runRunnables(boot []BootableProvider) {
 func safeRun(ctx context.Context, runnable RunnableProvider) (err error) {
 	defer func() {
 		if rec := recover(); rec != nil {
-			err = fmt.Errorf("panic: %v", rec)
+			err = panicError(rec)
 		}
 	}()
 
