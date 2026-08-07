@@ -29,31 +29,31 @@ type Config struct {
 	Trace                 *TraceConfig  `hcl:"trace,block"`
 	Metric                *MetricConfig `hcl:"metric,block"`
 	Log                   *LogConfig    `hcl:"log,block"`
-	ServiceName           string        `hcl:"service_name"`
-	ServiceVersion        string        `hcl:"service_version"`
+	ServiceName           string        `hcl:"service_name,optional"`
+	ServiceVersion        string        `hcl:"service_version,optional"`
 	DeploymentEnvironment string        `hcl:"deployment_environment,optional"` // optional deployment environment
 	ShutdownTimeout       time.Duration `hcl:"shutdown_timeout,optional"`       // default: 5s
 }
 
 type MetricConfig struct {
-	Enabled  bool          `hcl:"enabled"`
+	Enabled  bool          `hcl:"enabled,optional"`
 	Interval time.Duration `hcl:"interval,optional"` // default: 10s
-	Exporter ExporterType  `hcl:"exporter"`          // grpc, stdout
+	Exporter ExporterType  `hcl:"exporter,optional"` // grpc, stdout
 	GRPC     *GRPCConfig   `hcl:"grpc,block"`
 	Stdout   *StdoutConfig `hcl:"stdout,block"` // stdout configuration
 }
 
 type TraceConfig struct {
-	Enabled      bool          `hcl:"enabled"`
+	Enabled      bool          `hcl:"enabled,optional"`
 	BatchTimeout time.Duration `hcl:"batch_timeout,optional"` // default: 5s
-	Exporter     ExporterType  `hcl:"exporter"`               // grpc, stdout
+	Exporter     ExporterType  `hcl:"exporter,optional"`      // grpc, stdout
 	GRPC         *GRPCConfig   `hcl:"grpc,block"`
 	Stdout       *StdoutConfig `hcl:"stdout,block"` // stdout configuration
 }
 
 type LogConfig struct {
-	Enabled  bool          `hcl:"enabled"`
-	Exporter ExporterType  `hcl:"exporter"` // grpc, stdout
+	Enabled  bool          `hcl:"enabled,optional"`
+	Exporter ExporterType  `hcl:"exporter,optional"` // grpc, stdout
 	GRPC     *GRPCConfig   `hcl:"grpc,block"`
 	Stdout   *StdoutConfig `hcl:"stdout,block"` // stdout configuration
 }
@@ -71,7 +71,7 @@ type GRPCConfig struct {
 }
 
 type RetryConfig struct {
-	Enabled         bool          `hcl:"enabled"`                   // enable retry
+	Enabled         bool          `hcl:"enabled,optional"`          // enable retry
 	InitialInterval time.Duration `hcl:"initial_interval,optional"` // initial interval for retry
 	MaxInterval     time.Duration `hcl:"max_interval,optional"`     // maximum interval for retry
 	MaxElapsedTime  time.Duration `hcl:"max_elapsed_time,optional"` // maximum elapsed time for retry

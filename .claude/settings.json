@@ -10,7 +10,9 @@
       "Bash(rtk ls *)",
       "Bash(rtk make *)",
       "Bash(git add *)",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "Bash(echo \"exit=$?\")",
+      "Bash(rtk docker *)"
     ]
   }
 }

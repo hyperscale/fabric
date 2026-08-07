@@ -120,6 +120,47 @@ func TestService_Shutdown_HonorsDeadline(t *testing.T) {
 	assert.Contains(t, err.Error(), `"telemetry"`)
 }
 
+// A caller passing a context with no deadline must still get the budget the
+// service was configured with. Without this, svc.Shutdown(context.Background())
+// silently drains forever against a provider that ignores its context, and
+// WithShutdownTimeout is quietly discarded.
+func TestService_Shutdown_AppliesConfiguredTimeoutToDeadlinelessContext(t *testing.T) {
+	rec := newRecorder()
+	svc := testService(t, WithShutdownTimeout(80*time.Millisecond))
+
+	mustRegister(t, svc,
+		newFakeProvider(rec, "telemetry", PriorityTelemetry),
+		newWedgedProvider(t, rec, "wedged", PriorityServer),
+	)
+
+	require.NoError(t, svc.Start(t.Context()))
+
+	start := time.Now()
+	err := svc.Shutdown(context.Background()) // nolint: usetesting // the point is a deadline-less context
+	elapsed := time.Since(start)
+
+	require.Error(t, err)
+	assert.ErrorIs(t, err, context.DeadlineExceeded)
+	assert.Less(t, elapsed, 2*time.Second, "the configured shutdown timeout was not applied")
+}
+
+// A caller-supplied deadline that is tighter than the configured budget wins.
+func TestService_Shutdown_CallerDeadlineWins(t *testing.T) {
+	rec := newRecorder()
+	svc := testService(t, WithShutdownTimeout(time.Hour))
+
+	mustRegister(t, svc, newWedgedProvider(t, rec, "wedged", PriorityServer))
+	require.NoError(t, svc.Start(t.Context()))
+
+	ctx, cancel := context.WithTimeout(t.Context(), 60*time.Millisecond)
+	defer cancel()
+
+	start := time.Now()
+
+	require.Error(t, svc.Shutdown(ctx))
+	assert.Less(t, time.Since(start), 2*time.Second)
+}
+
 func TestService_Shutdown_JoinsAllStopErrors(t *testing.T) {
 	rec := newRecorder()
 	svc := testService(t)

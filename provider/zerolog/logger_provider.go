@@ -37,9 +37,9 @@ const (
 )
 
 type Config struct {
-	Level  string       `hcl:"level"`
-	Format OutputFormat `hcl:"format"`
-	Stdout StdOutput    `hcl:"stdout"`
+	Level  string       `hcl:"level,optional"`
+	Format OutputFormat `hcl:"format,optional"`
+	Stdout StdOutput    `hcl:"stdout,optional"`
 }
 
 func ConfigProvider(cfg *fabric.Configuration) (*Config, error) {
