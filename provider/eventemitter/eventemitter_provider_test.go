@@ -3,6 +3,7 @@ package eventemitter
 import (
 	"testing"
 
+	"github.com/hyperscale/fabric"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -33,14 +34,14 @@ func TestProvider_Priority(t *testing.T) {
 	dispatcher, _ := Factory()
 	provider := NewProvider(dispatcher)
 
-	assert.Equal(t, 0, provider.Priority())
+	assert.Equal(t, fabric.PriorityBroker, provider.Priority())
 }
 
 func TestProvider_Start(t *testing.T) {
 	dispatcher, _ := Factory()
 	provider := NewProvider(dispatcher)
 
-	err := provider.Start()
+	err := provider.Start(t.Context())
 	assert.NoError(t, err)
 }
 
@@ -48,7 +49,7 @@ func TestProvider_Stop(t *testing.T) {
 	dispatcher, _ := Factory()
 	provider := NewProvider(dispatcher)
 
-	err := provider.Stop()
+	err := provider.Stop(t.Context())
 	assert.NoError(t, err)
 }
 
@@ -63,7 +64,7 @@ func TestProvider_StopAfterEmit(t *testing.T) {
 	})
 	dispatcher.Dispatch("test")
 
-	err := provider.Stop()
+	err := provider.Stop(t.Context())
 	assert.NoError(t, err)
 	assert.True(t, called)
 }

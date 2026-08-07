@@ -1,6 +1,7 @@
 package mysql
 
 import (
+	"context"
 	"fmt"
 	"log/slog"
 	"net"
@@ -87,14 +88,27 @@ func (p *Provider) Name() string {
 }
 
 func (p *Provider) Priority() int {
-	return 0
+	return fabric.PriorityDatabase
 }
 
-func (p *Provider) Start() error {
+// Start verifies the connection acquired by Factory is actually usable, so that
+// an unreachable database is a fatal boot error rather than a failure on the
+// first query.
+func (p *Provider) Start(ctx context.Context) error {
+	if err := p.db.PingContext(ctx); err != nil {
+		return fmt.Errorf("mysql ping: %w", err)
+	}
+
 	return nil
 }
 
-func (p *Provider) Stop() error {
+// Stop closes the pool. database/sql offers no context-aware Close, so ctx is
+// only used to bail out early when the shutdown budget is already exhausted.
+func (p *Provider) Stop(ctx context.Context) error {
+	if err := ctx.Err(); err != nil {
+		return fmt.Errorf("mysql close: %w", err)
+	}
+
 	// nolint: wrapcheck // not nessary
 	return p.db.Close()
 }

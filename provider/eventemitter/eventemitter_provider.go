@@ -1,6 +1,9 @@
 package eventemitter
 
 import (
+	"context"
+	"fmt"
+
 	"github.com/euskadi31/go-eventemitter"
 	"github.com/euskadi31/wire"
 	"github.com/hyperscale/fabric"
@@ -37,15 +40,29 @@ func (p *Provider) Name() string {
 }
 
 func (p *Provider) Priority() int {
-	return 0
+	return fabric.PriorityBroker
 }
 
-func (p *Provider) Start() error {
+func (p *Provider) Start(_ context.Context) error {
 	return nil
 }
 
-func (p *Provider) Stop() error {
-	p.dispatcher.Wait()
+// Stop drains the in-flight events. dispatcher.Wait is not context-aware, so it
+// runs in its own goroutine and ctx bounds the wait: a listener that never
+// returns cannot hold the whole shutdown hostage.
+func (p *Provider) Stop(ctx context.Context) error {
+	drained := make(chan struct{})
 
-	return nil
+	go func() {
+		p.dispatcher.Wait()
+
+		close(drained)
+	}()
+
+	select {
+	case <-drained:
+		return nil
+	case <-ctx.Done():
+		return fmt.Errorf("eventemitter drain: %w", ctx.Err())
+	}
 }

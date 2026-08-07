@@ -5,6 +5,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/hyperscale/fabric"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/sdk/resource"
@@ -104,12 +105,12 @@ func TestTraceProvider_Name(t *testing.T) {
 
 func TestTraceProvider_Priority(t *testing.T) {
 	provider := NewTraceProvider(&Config{}, nil)
-	assert.Equal(t, 0, provider.Priority())
+	assert.Equal(t, fabric.PriorityTelemetry, provider.Priority())
 }
 
 func TestTraceProvider_Start(t *testing.T) {
 	provider := NewTraceProvider(&Config{}, nil)
-	err := provider.Start()
+	err := provider.Start(t.Context())
 	assert.NoError(t, err)
 }
 
@@ -119,7 +120,7 @@ func TestTraceProvider_Stop_NilProvider(t *testing.T) {
 	}
 	provider := NewTraceProvider(cfg, nil)
 
-	err := provider.Stop()
+	err := provider.Stop(t.Context())
 	assert.NoError(t, err)
 }
 
@@ -141,7 +142,7 @@ func TestTraceProvider_Stop_WithProvider(t *testing.T) {
 
 	provider := NewTraceProvider(cfg, tp)
 
-	err = provider.Stop()
+	err = provider.Stop(t.Context())
 	assert.NoError(t, err)
 }
 
