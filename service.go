@@ -90,11 +90,7 @@ func (s *Service) Start() error {
 
 	signal.Notify(s.signal, os.Interrupt, syscall.SIGTERM)
 
-	bootables := s.providers
-
-	By(func(left, right BootableProvider) bool {
-		return left.Priority() < right.Priority()
-	}).Sort(bootables)
+	bootables := order(s.providers)
 
 	var wg sync.WaitGroup
 
@@ -108,7 +104,7 @@ func (s *Service) Start() error {
 
 			wg.Done()
 
-			if err := p.Start(); err != nil {
+			if err := p.Start(ctx); err != nil {
 				sl.ErrorContext(ctx, "Start failed", slog.Any("error", err))
 			}
 		}(provider)
@@ -149,8 +145,7 @@ func (s *Service) Start() error {
 
 		sl.DebugContext(ctx, "Stopping provider")
 
-		// TODO: forward ctx to provider.Stop
-		if err := provider.Stop(); err != nil {
+		if err := provider.Stop(ctx); err != nil {
 			sl.ErrorContext(ctx, "Stop failed", slog.Any("error", err))
 		}
 	}

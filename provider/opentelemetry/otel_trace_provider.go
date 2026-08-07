@@ -119,20 +119,27 @@ func (p *TraceProvider) Name() string {
 }
 
 func (p *TraceProvider) Priority() int {
-	return 0
+	return fabric.PriorityTelemetry
 }
 
-func (p *TraceProvider) Start() error {
+func (p *TraceProvider) Start(_ context.Context) error {
 	return nil
 }
 
-func (p *TraceProvider) Stop() error {
+// Stop flushes and shuts the tracer provider down within the service shutdown
+// budget carried by ctx. cfg.ShutdownTimeout layers on top of it as a
+// per-provider cap: context.WithTimeout keeps whichever deadline is nearer.
+func (p *TraceProvider) Stop(ctx context.Context) error {
 	if p.tp == nil {
 		return nil // nothing to shutdown
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), p.cfg.ShutdownTimeout)
-	defer cancel()
+	if p.cfg.ShutdownTimeout > 0 {
+		var cancel context.CancelFunc
+
+		ctx, cancel = context.WithTimeout(ctx, p.cfg.ShutdownTimeout)
+		defer cancel()
+	}
 
 	// nolint: wrapcheck // not nessary
 	return p.tp.Shutdown(ctx)

@@ -123,20 +123,27 @@ func (p *MetricProvider) Name() string {
 }
 
 func (p *MetricProvider) Priority() int {
-	return 0
+	return fabric.PriorityTelemetry
 }
 
-func (p *MetricProvider) Start() error {
+func (p *MetricProvider) Start(_ context.Context) error {
 	return nil
 }
 
-func (p *MetricProvider) Stop() error {
+// Stop flushes and shuts the meter provider down within the service shutdown
+// budget carried by ctx. cfg.ShutdownTimeout layers on top of it as a
+// per-provider cap: context.WithTimeout keeps whichever deadline is nearer.
+func (p *MetricProvider) Stop(ctx context.Context) error {
 	if p.mp == nil {
 		return nil // nothing to shutdown
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), p.cfg.ShutdownTimeout)
-	defer cancel()
+	if p.cfg.ShutdownTimeout > 0 {
+		var cancel context.CancelFunc
+
+		ctx, cancel = context.WithTimeout(ctx, p.cfg.ShutdownTimeout)
+		defer cancel()
+	}
 
 	// nolint: wrapcheck // not nessary
 	return p.mp.Shutdown(ctx)
