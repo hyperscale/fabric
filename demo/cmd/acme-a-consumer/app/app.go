@@ -23,15 +23,17 @@ func NewApplication(logger *slog.Logger, opts *Options) (*fabric.Service, error)
 	logger.Debug("Starting Fabric Application")
 
 	s, err := fabric.NewService(
-		fabric.Name("acme-a-consumer"),
-		fabric.Version("0.0.1"),
-		fabric.Logger(logger),
+		fabric.WithName("acme-a-consumer"),
+		fabric.WithVersion("0.0.1"),
+		fabric.WithLogger(logger),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create service: %w", err)
 	}
 
-	s.Register(opts.MySQLProvider)
+	if err := s.Register(opts.MySQLProvider); err != nil {
+		return nil, fmt.Errorf("failed to register providers: %w", err)
+	}
 
 	return s, nil
 }
