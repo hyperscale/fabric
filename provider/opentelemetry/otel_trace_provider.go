@@ -26,6 +26,8 @@ func TraceFactory(cfg *Config, resources *resource.Resource) (*sdktrace.TracerPr
 		return nil, nil
 	}
 
+	installErrorHandler()
+
 	ctx := context.Background()
 
 	var (

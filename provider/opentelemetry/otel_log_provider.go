@@ -25,6 +25,8 @@ func LogFactory(cfg *Config, resources *resource.Resource) (*sdklog.LoggerProvid
 		return nil, nil
 	}
 
+	installErrorHandler()
+
 	ctx := context.Background()
 
 	var (

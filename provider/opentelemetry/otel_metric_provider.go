@@ -25,6 +25,8 @@ func MetricFactory(cfg *Config, resources *resource.Resource) (*sdkmetric.MeterP
 		return nil, nil
 	}
 
+	installErrorHandler()
+
 	ctx := context.Background()
 
 	var (
